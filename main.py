@@ -44,7 +44,6 @@ idle = [
 
 player_anim_count = 0
 idle_anim_count = 0
-bg_x = 0
 
 bg_sound = pygame.mixer.Sound('sounds/walking_sound.mp3')
 
@@ -65,11 +64,6 @@ while running:
 	# 	screen.blit(right_walk[player_anim_count], (player_x, player_y))
 	# else:
 	# 	screen.blit(idle[idle_anim_count], (player_x, player_y))
-
-
-	
-
-
 
 	if player_anim_count == 7:
 		player_anim_count = 0
