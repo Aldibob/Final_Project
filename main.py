@@ -12,8 +12,7 @@ pygame.display.set_icon(icon)
 bg = pygame.image.load('icons/main_bg.jpg').convert()
 
 
-player_anim_count = 0
-idle_anim_count = 0
+
 
 bg_sound = pygame.mixer.Sound('sounds/walking_sound.mp3')
 
