@@ -28,12 +28,7 @@ while running:
 
 	keys = pygame.key.get_pressed()
 
-	# if keys[pygame.K_a]:
-	# 	screen.blit(left_walk[player_anim_count], (player_x, player_y))
-	# elif keys[pygame.K_d]:
-	# 	screen.blit(right_walk[player_anim_count], (player_x, player_y))
-	# else:
-	# 	screen.blit(idle[idle_anim_count], (player_x, player_y))
+
 
 	if player_anim_count == 7:
 		player_anim_count = 0
