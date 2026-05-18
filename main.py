@@ -74,10 +74,7 @@ while running:
 	# 	screen.blit(idle[idle_anim_count], (player_x, player_y))
 
 
-	if keys[pygame.K_a] and player_x > 50:
-		player_x -= player_speed
-	elif keys[pygame.K_d] and player_x < 1000:
-		player_x += player_speed
+	
 
 
 
