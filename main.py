@@ -11,18 +11,6 @@ pygame.display.set_icon(icon)
 bg = pygame.image.load('icons/main_bg.jpg').convert()
 
 
-]
-
-left_run = [
-	pygame.image.load('images/Fighter/run/left_run/frame_1.png').convert_alpha(),
-	pygame.image.load('images/Fighter/run/left_run/frame_2.png').convert_alpha(),
-	pygame.image.load('images/Fighter/run/left_run/frame_3.png').convert_alpha(),
-	pygame.image.load('images/Fighter/run/left_run/frame_4.png').convert_alpha(),
-	pygame.image.load('images/Fighter/run/left_run/frame_5.png').convert_alpha(),
-	pygame.image.load('images/Fighter/run/left_run/frame_6.png').convert_alpha(),
-	pygame.image.load('images/Fighter/run/left_run/frame_7.png').convert_alpha(),
-	pygame.image.load('images/Fighter/run/left_run/frame_8.png').convert_alpha()
-]
 
 idle = [
 	pygame.image.load('images/Fighter/idle_frames/idle_0.png').convert_alpha(),
