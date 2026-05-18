@@ -1,0 +1,103 @@
+import pygame
+
+clock = pygame.time.Clock()
+
+pygame.init()
+screen = pygame.display.set_mode((1200, 500)) # flags= NOFRAME
+pygame.display.set_caption("Pixel Fighters")
+icon = pygame.image.load('images/fightericon.png').convert_alpha()
+pygame.display.set_icon(icon)
+
+player_speed = 12
+player_x = 150
+player_y = 210
+
+is_jump = False
+jump_count = 7
+
+
+bg = pygame.image.load('icons/main_bg.jpg').convert()
+
+right_run = [
+	pygame.image.load('images/Fighter/run/right_run/frame_1.png').convert_alpha(),
+	pygame.image.load('images/Fighter/run/right_run/frame_2.png').convert_alpha(),
+	pygame.image.load('images/Fighter/run/right_run/frame_3.png').convert_alpha(),
+	pygame.image.load('images/Fighter/run/right_run/frame_4.png').convert_alpha(),
+	pygame.image.load('images/Fighter/run/right_run/frame_5.png').convert_alpha(),
+	pygame.image.load('images/Fighter/run/right_run/frame_6.png').convert_alpha(),
+	pygame.image.load('images/Fighter/run/right_run/frame_7.png').convert_alpha(),
+	pygame.image.load('images/Fighter/run/right_run/frame_8.png').convert_alpha(),
+
+]
+
+left_run = [
+	pygame.image.load('images/Fighter/run/left_run/frame_1.png').convert_alpha(),
+	pygame.image.load('images/Fighter/run/left_run/frame_2.png').convert_alpha(),
+	pygame.image.load('images/Fighter/run/left_run/frame_3.png').convert_alpha(),
+	pygame.image.load('images/Fighter/run/left_run/frame_4.png').convert_alpha(),
+	pygame.image.load('images/Fighter/run/left_run/frame_5.png').convert_alpha(),
+	pygame.image.load('images/Fighter/run/left_run/frame_6.png').convert_alpha(),
+	pygame.image.load('images/Fighter/run/left_run/frame_7.png').convert_alpha(),
+	pygame.image.load('images/Fighter/run/left_run/frame_8.png').convert_alpha()
+]
+
+idle = [
+	pygame.image.load('images/Fighter/idle_frames/idle_0.png').convert_alpha(),
+	pygame.image.load('images/Fighter/idle_frames/idle_1.png').convert_alpha(),
+	pygame.image.load('images/Fighter/idle_frames/idle_2.png').convert_alpha(),
+	pygame.image.load('images/Fighter/idle_frames/idle_3.png').convert_alpha(),
+	pygame.image.load('images/Fighter/idle_frames/idle_4.png').convert_alpha(),
+	pygame.image.load('images/Fighter/idle_frames/idle_5.png').convert_alpha(),
+]
+
+player_anim_count = 0
+idle_anim_count = 0
+bg_x = 0
+
+bg_sound = pygame.mixer.Sound('sounds/walking_sound.mp3')
+
+# bg_sound.play()
+
+
+running = True
+while running:
+
+
+	screen.blit(bg,(bg_x, 0))
+	# screen.blit(bg, (bg_x + 736, 0))
+
+	keys = pygame.key.get_pressed()
+
+	# if keys[pygame.K_a]:
+	# 	screen.blit(left_walk[player_anim_count], (player_x, player_y))
+	# elif keys[pygame.K_d]:
+	# 	screen.blit(right_walk[player_anim_count], (player_x, player_y))
+	# else:
+	# 	screen.blit(idle[idle_anim_count], (player_x, player_y))
+
+
+	if keys[pygame.K_a] and player_x > 50:
+		player_x -= player_speed
+	elif keys[pygame.K_d] and player_x < 1000:
+		player_x += player_speed
+
+
+
+	if player_anim_count == 7:
+		player_anim_count = 0
+	else:
+		player_anim_count += 1
+
+	if idle_anim_count == 5:
+		idle_anim_count = 0
+	else:
+		idle_anim_count += 1
+
+	pygame.display.update()
+
+	for event in pygame.event.get():
+		if event.type == pygame.QUIT:
+			running = False
+			pygame.quit()
+
+	clock.tick(13)
