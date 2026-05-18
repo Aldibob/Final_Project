@@ -62,8 +62,7 @@ running = True
 while running:
 
 
-	screen.blit(bg,(bg_x, 0))
-	# screen.blit(bg, (bg_x + 736, 0))
+	screen.blit(bg,(0, 0))
 
 	keys = pygame.key.get_pressed()
 
