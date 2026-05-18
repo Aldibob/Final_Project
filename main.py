@@ -12,16 +12,6 @@ pygame.display.set_icon(icon)
 bg = pygame.image.load('icons/main_bg.jpg').convert()
 
 
-
-idle = [
-	pygame.image.load('images/Fighter/idle_frames/idle_0.png').convert_alpha(),
-	pygame.image.load('images/Fighter/idle_frames/idle_1.png').convert_alpha(),
-	pygame.image.load('images/Fighter/idle_frames/idle_2.png').convert_alpha(),
-	pygame.image.load('images/Fighter/idle_frames/idle_3.png').convert_alpha(),
-	pygame.image.load('images/Fighter/idle_frames/idle_4.png').convert_alpha(),
-	pygame.image.load('images/Fighter/idle_frames/idle_5.png').convert_alpha(),
-]
-
 player_anim_count = 0
 idle_anim_count = 0
 
