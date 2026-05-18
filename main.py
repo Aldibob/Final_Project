@@ -8,13 +8,6 @@ pygame.display.set_caption("Pixel Fighters")
 icon = pygame.image.load('images/fightericon.png').convert_alpha()
 pygame.display.set_icon(icon)
 
-player_speed = 12
-
-
-is_jump = False
-jump_count = 7
-
-
 bg = pygame.image.load('icons/main_bg.jpg').convert()
 
 right_run = [
