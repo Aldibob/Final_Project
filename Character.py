@@ -68,10 +68,6 @@ class Character:
 
 		self.frame_index += 0.5
 
-		if self.state == "attack":
-			self.is_attacking = False
-			self.state = "idle"
-			self.frame_index = 0
 
 		if self.frame_index >= len(frames):
 			self.frame_index = 0
