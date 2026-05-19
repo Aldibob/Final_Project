@@ -81,10 +81,10 @@ class Character:
 	def move(self,keys):
 		self.vx = 0
 
-		if keys[pygame.K_a]:
+		if keys[pygame.K_a] and self.x > 10:
 			self.vx -= self.speed
 			self.facing_right = False
-		if keys[pygame.K_d]:
+		if keys[pygame.K_d] and self.x < 1100:
 			self.vx += self.speed
 			self.facing_right = True
 
