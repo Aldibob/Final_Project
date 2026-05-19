@@ -37,6 +37,12 @@ class Character:
 		self.attack_frame = 0
 		self.attack_timer = 0
 
+		self.attack_started = False
+		self.attack_start_frame = 3
+		self.attack_end_frame = 3
+		self.hit_done = False
+
+
 		self.vx = 0
 		self.speed = 7
 		self.facing_right = True
@@ -68,8 +74,10 @@ class Character:
 
 		self.frame_index += 0.5
 
-
 		if self.frame_index >= len(frames):
+			if self.state == "attack":
+				self.is_attacking = False
+				self.state = "idle"
 			self.frame_index = 0
 
 	def draw(self, screen):
@@ -130,6 +138,7 @@ class Character:
 			self.state = "attack"
 			self.frame_index = 0
 			self.attack_timer = 0
+			self.hit_done = False
 
 	def update_attack(self):
 		if self.is_attacking:
@@ -149,14 +158,27 @@ class Character:
 		if not self.is_attacking:
 			return None
 
-		return pygame.Rect(self.x, self.y, 70, 80)
+		if self.facing_right:
+			return pygame.Rect(self.x + 40, self.y, 40, 80)
+		else:
+			return pygame.Rect(self.x - 40, self.y, 40, 80)
 
 	def damage_deal(self, other):
-		if self.is_attacking:
-			attack_box = self.attack_hitbox()
+		if not self.is_attacking:
+			return
 
-			if attack_box and attack_box.colliderect(other.get_hitbox()):
-				other.hp -= self.damage
+		current_frame = int(self.frame_index)
 
-				self.is_attacking = False
+		if current_frame < self.attack_start_frame or current_frame > self.attack_end_frame:
+			return
+
+		if self.hit_done:
+			return
+
+		attack_box = self.attack_hitbox()
+
+		if attack_box and attack_box.colliderect(other.get_hitbox()):
+			other.hp -= self.damage
+
+			self.hit_done = True
 

@@ -80,4 +80,4 @@ while running:
 
 
 
-	clock.tick(20)
+	clock.tick(30)
