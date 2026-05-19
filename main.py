@@ -17,7 +17,7 @@ bg = pygame.image.load('icons/main_bg.jpg').convert()
 
 bg_sound = pygame.mixer.Sound('sounds/walking_sound.mp3')
 
-# bg_sound.play()
+bg_sound.play()
 
 player1 = Character("fighter", 100, 10, 150)
 
