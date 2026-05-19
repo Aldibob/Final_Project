@@ -16,10 +16,11 @@ def load_frames(folder):
 	return frames
 
 class Character:
-	def __init__(self,name,hp,damage,x):
+	def __init__(self,name,hp,damage,x, controls):
 		self.name = name
 		self.hp = hp
 		self.damage = damage
+		self.controls = controls
 
 		self.x = x
 		self.base_y = 210
@@ -32,6 +33,10 @@ class Character:
 		self.state = "idle"
 		self.animations = {}
 
+		self.is_attacking = False
+		self.attack_frame = 0
+		self.attack_timer = 0
+
 		self.vx = 0
 		self.speed = 7
 		self.facing_right = True
@@ -39,13 +44,17 @@ class Character:
 	def update(self, keys):
 		self.move(keys)
 		self.jump(keys)
+		self.update_attack()
 		self.update_animation()
 
 	def update_animation(self):
 		old_state = self.state
 
-		if self.vx != 0:
-			self.state = "Run"
+		if self.is_attacking:
+			self.state = "attack"
+
+		elif self.vx != 0:
+			self.state = "run"
 		else:
 			self.state = "idle"
 
@@ -57,7 +66,12 @@ class Character:
 		if len(frames) == 0:
 			return
 
-		self.frame_index += 0.2
+		self.frame_index += 0.5
+
+		if self.state == "attack":
+			self.is_attacking = False
+			self.state = "idle"
+			self.frame_index = 0
 
 		if self.frame_index >= len(frames):
 			self.frame_index = 0
@@ -79,12 +93,15 @@ class Character:
 		screen.blit(frame, (self.x, self.y))
 
 	def move(self,keys):
+		if self.is_attacking:
+			return
+
 		self.vx = 0
 
-		if keys[pygame.K_a] and self.x > 10:
+		if keys[self.controls["left"]] and self.x > 10:
 			self.vx -= self.speed
 			self.facing_right = False
-		if keys[pygame.K_d] and self.x < 1100:
+		if keys[self.controls["right"]] and self.x < 1100:
 			self.vx += self.speed
 			self.facing_right = True
 
@@ -93,7 +110,7 @@ class Character:
 
 	def jump(self,keys):
 		if not self.is_jump:
-			if keys[pygame.K_w]:
+			if keys[self.controls["up"]]:
 				self.is_jump = True
 				self.jump_count = 9
 		else:
@@ -109,4 +126,41 @@ class Character:
 			else:
 				self.is_jump = False
 				self.y = self.base_y
+
+
+	def start_attack(self):
+		if not self.is_attacking:
+			self.is_attacking = True
+			self.state = "attack"
+			self.frame_index = 0
+			self.attack_timer = 0
+
+	def update_attack(self):
+		if self.is_attacking:
+			self.attack_timer += 1
+
+			frames = self.animations["attack"]
+
+			if self.frame_index > len(frames) - 1:
+				self.is_attacking = False
+				self.state = "idle"
+				self.attack_timer = 0
+
+	def get_hitbox(self):
+		return pygame.Rect(self.x, self.y, 50, 80)
+
+	def attack_hitbox(self):
+		if not self.is_attacking:
+			return None
+
+		return pygame.Rect(self.x, self.y, 70, 80)
+
+	def damage_deal(self, other):
+		if self.is_attacking:
+			attack_box = self.attack_hitbox()
+
+			if attack_box and attack_box.colliderect(other.get_hitbox()):
+				other.hp -= self.damage
+
+				self.is_attacking = False
 
