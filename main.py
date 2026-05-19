@@ -1,6 +1,5 @@
 import pygame
-from Character import load_frames
-from Character import Character
+from Character import Character, load_frames
 
 
 clock = pygame.time.Clock()
