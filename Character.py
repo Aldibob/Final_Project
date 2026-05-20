@@ -19,6 +19,7 @@ class Character:
 	def __init__(self,name,hp,damage,x, controls):
 		self.name = name
 		self.hp = hp
+		self.max_hp = hp
 		self.damage = damage
 		self.controls = controls
 
@@ -30,7 +31,7 @@ class Character:
 		self.is_jump = False
 
 		self.frame_index = 0
-		self.state = "idle"
+		self.state = "idle_frames"
 		self.animations = {}
 
 		self.is_attacking = False
@@ -60,9 +61,9 @@ class Character:
 			self.state = "attack"
 
 		elif self.vx != 0:
-			self.state = "run"
+			self.state = "run_frames"
 		else:
-			self.state = "idle"
+			self.state = "idle_frames"
 
 		if old_state != self.state:
 			self.frame_index = 0
@@ -77,7 +78,7 @@ class Character:
 		if self.frame_index >= len(frames):
 			if self.state == "attack":
 				self.is_attacking = False
-				self.state = "idle"
+				self.state = "idle_frames"
 			self.frame_index = 0
 
 	def draw(self, screen):
@@ -148,7 +149,7 @@ class Character:
 
 			if self.frame_index > len(frames) - 1:
 				self.is_attacking = False
-				self.state = "idle"
+				self.state = "idle_frames"
 				self.attack_timer = 0
 
 	def get_hitbox(self):
@@ -180,5 +181,16 @@ class Character:
 		if attack_box and attack_box.colliderect(other.get_hitbox()):
 			other.hp -= self.damage
 
+			if other.hp < 0:
+				other.hp = 0
+
 			self.hit_done = True
 
+	def draw_hp(self,screen,x,y):
+		pygame.draw.rect(screen, (60,60,60), (x,y,300,30))
+
+		hp_width = (self.hp / self.max_hp) * 300
+
+		pygame.draw.rect(screen, (255,0,0), (x,y,hp_width,30))
+
+		pygame.draw.rect(screen, (255,255,255), (x,y,300,30), 3)

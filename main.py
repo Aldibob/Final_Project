@@ -27,9 +27,9 @@ player1_controls = {
 player1 = Character("Baki", 100, 10, 150, player1_controls)
 
 player1.animations = {
-	"idle": load_frames(r"images\Fighter\idle"),
-	"run": load_frames(r"images\Fighter\Run\run"),
-	"attack": load_frames(r"images\Fighter\attack\attack_frames")
+	"idle_frames": load_frames(r"images\Fighter\idle"),
+	"run_frames": load_frames(r"images\Fighter\Run\run"),
+	"attack": load_frames(r"images\Fighter\attack_frames")
 }
 
 player2_controls = {
@@ -42,9 +42,9 @@ player2_controls = {
 player2 = Character("Samurai",100, 10, 900, player2_controls)
 
 player2.animations = {
-	"idle": load_frames(r"images\Samurai\idle"),
-	"run": load_frames(r"images\Samurai\Run\run_frames"),
-	"attack": load_frames(r"images\Samurai\attack\attack_frames")
+	"idle_frames": load_frames(r"images\Samurai\idle_frames"),
+	"run_frames": load_frames(r"images\Samurai\run_frames"),
+	"attack": load_frames(r"images\Samurai\attack_frames")
 }
 
 
@@ -52,6 +52,8 @@ running = True
 while running:
 
 	screen.blit(bg,(0, 0))
+	player1.draw_hp(screen,50,30)
+	player2.draw_hp(screen, 850, 30)
 
 	keys = pygame.key.get_pressed()
 
