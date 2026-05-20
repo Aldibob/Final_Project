@@ -44,17 +44,23 @@ class Character:
 		self.hit_done = False
 
 		self.attack_cooldown = 0
-		self.attack_cooldown_max = 4
+		self.attack_cooldown_max = 2
 
 		self.vx = 0
 		self.speed = 10
 		self.facing_right = True
 
+		self.is_dead = False
+
 	def update(self, keys):
-		self.move(keys)
-		self.jump(keys)
 		self.update_attack()
 		self.update_animation()
+
+		if self.is_dead:
+			return
+
+		self.move(keys)
+		self.jump(keys)
 
 		if self.attack_cooldown > 0:
 			self.attack_cooldown -= 1
@@ -62,16 +68,21 @@ class Character:
 	def update_animation(self):
 		old_state = self.state
 
-		if self.is_attacking:
-			self.state = "attack"
+		if self.is_dead:
+			self.state = "death"
+			self.vx = 0
+			self.is_attacking = False
 
+		elif self.is_attacking:
+			self.state = "attack"
 		elif self.vx != 0:
 			self.state = "run_frames"
 		else:
 			self.state = "idle_frames"
 
 		if old_state != self.state:
-			self.frame_index = 0
+			if self.state != "death":
+				self.frame_index = 0
 
 		frames = self.animations[self.state]
 
@@ -80,10 +91,14 @@ class Character:
 
 		self.frame_index += 0.5
 
+		if self.state == "death":
+			if self.frame_index >= len(frames) - 1:
+				self.frame_index = len(frames) - 1
+			return
+
 		if self.frame_index >= len(frames):
 			if self.state == "attack":
 				self.is_attacking = False
-				self.state = "idle_frames"
 			self.frame_index = 0
 
 	def draw(self, screen):
@@ -191,12 +206,21 @@ class Character:
 		attack_box = self.attack_hitbox()
 
 		if attack_box and attack_box.colliderect(other.get_hitbox()):
-			other.hp -= self.damage
-
-			if other.hp < 0:
-				other.hp = 0
+			other.take_damage(self.damage)
 
 			self.hit_done = True
+
+	def take_damage(self,dmg):
+		if self.is_dead:
+			return
+
+		self.hp -= dmg
+
+		if self.hp <= 0:
+			self.hp = 0
+			self.is_dead = True
+			self.state = "death"
+			self.frame_index = 0
 
 	def draw_hp(self,screen,x,y):
 		pygame.draw.rect(screen, (60,60,60), (x,y,300,30))
