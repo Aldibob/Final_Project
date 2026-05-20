@@ -43,6 +43,8 @@ class Character:
 		self.attack_end_frame = 3
 		self.hit_done = False
 
+		self.attack_cooldown = 0
+		self.attack_cooldown_max = 20
 
 		self.vx = 0
 		self.speed = 7
@@ -53,6 +55,9 @@ class Character:
 		self.jump(keys)
 		self.update_attack()
 		self.update_animation()
+
+		if self.attack_cooldown > 0:
+			self.attack_cooldown -= 1
 
 	def update_animation(self):
 		old_state = self.state
@@ -134,12 +139,18 @@ class Character:
 
 
 	def start_attack(self):
-		if not self.is_attacking:
-			self.is_attacking = True
-			self.state = "attack"
-			self.frame_index = 0
-			self.attack_timer = 0
-			self.hit_done = False
+		if self.is_attacking:
+			return
+
+		if self.attack_cooldown > 0:
+			return
+
+
+		self.is_attacking = True
+		self.state = "attack"
+		self.frame_index = 0
+		self.attack_timer = 0
+		self.hit_done = False
 
 	def update_attack(self):
 		if self.is_attacking:
@@ -151,6 +162,7 @@ class Character:
 				self.is_attacking = False
 				self.state = "idle_frames"
 				self.attack_timer = 0
+				self.attack_cooldown = self.attack_cooldown_max
 
 	def get_hitbox(self):
 		return pygame.Rect(self.x, self.y, 50, 80)
