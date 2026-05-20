@@ -27,7 +27,8 @@ player1_controls = {
 	"left": pygame.K_a,
 	"right": pygame.K_d,
 	"up": pygame.K_w,
-	"attack": pygame.K_e
+	"attack": pygame.K_e,
+	"block": pygame.K_f
 }
 
 player1 = Character("Baki", 100, 15, 150, player1_controls)
@@ -36,14 +37,16 @@ player1.animations = {
 	"idle_frames": load_frames(r"images\Fighter\idle_frames"),
 	"run_frames": load_frames(r"images\Fighter\run_frames"),
 	"attack": load_frames(r"images\Fighter\attack_frames"),
-	"death": load_frames(r"images\Fighter\dead_frames")
+	"death": load_frames(r"images\Fighter\dead_frames"),
+	"block": load_frames(r"images\Fighter\block_frames")
 }
 
 player2_controls = {
 	"left": pygame.K_LEFT,
 	"right": pygame.K_RIGHT,
 	"up": pygame.K_UP,
-	"attack": pygame.K_KP0
+	"attack": pygame.K_KP0,
+	"block": pygame.K_DOWN
 }
 
 player2 = Character("Samurai",100, 15, 900, player2_controls)
@@ -52,7 +55,8 @@ player2.animations = {
 	"idle_frames": load_frames(r"images\Samurai\idle_frames"),
 	"run_frames": load_frames(r"images\Samurai\run_frames"),
 	"attack": load_frames(r"images\Samurai\attack_frames"),
-	"death": load_frames(r"images\Samurai\dead_frames")
+	"death": load_frames(r"images\Samurai\dead_frames"),
+	"block": load_frames(r"images\Samurai\block_frames")
 }
 
 
@@ -117,7 +121,6 @@ while running:
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			running = False
-			pygame.quit()
 
 		if event.type == pygame.KEYDOWN:
 			if game_state == "fight":

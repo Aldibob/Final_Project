@@ -44,7 +44,7 @@ class Character:
 		self.hit_done = False
 
 		self.attack_cooldown = 0
-		self.attack_cooldown_max = 2
+		self.attack_cooldown_max = 4
 
 		self.vx = 0
 		self.speed = 10
@@ -52,7 +52,14 @@ class Character:
 
 		self.is_dead = False
 
+		self.is_blocking = False
+
 	def update(self, keys):
+		if not self.is_dead and not self.is_attacking:
+			self.is_blocking = keys[self.controls["block"]]
+		else:
+			self.is_blocking = False
+
 		self.update_attack()
 		self.update_animation()
 
@@ -75,6 +82,8 @@ class Character:
 
 		elif self.is_attacking:
 			self.state = "attack"
+		elif self.is_blocking:
+			self.state = "block"
 		elif self.vx != 0:
 			self.state = "run_frames"
 		else:
@@ -118,7 +127,8 @@ class Character:
 		screen.blit(frame, (self.x, self.y))
 
 	def move(self,keys):
-		if self.is_attacking:
+		if self.is_attacking or self.is_blocking:
+			self.vx = 0
 			return
 
 		self.vx = 0
@@ -213,6 +223,8 @@ class Character:
 	def take_damage(self,dmg):
 		if self.is_dead:
 			return
+		if self.is_blocking:
+			dmg = max(1, dmg // 3)
 
 		self.hp -= dmg
 
