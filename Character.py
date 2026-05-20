@@ -44,7 +44,7 @@ class Character:
 		self.hit_done = False
 
 		self.attack_cooldown = 0
-		self.attack_cooldown_max = 4
+		self.attack_cooldown_max = 6
 
 		self.vx = 0
 		self.speed = 10
