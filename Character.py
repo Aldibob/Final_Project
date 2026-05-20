@@ -44,10 +44,10 @@ class Character:
 		self.hit_done = False
 
 		self.attack_cooldown = 0
-		self.attack_cooldown_max = 20
+		self.attack_cooldown_max = 4
 
 		self.vx = 0
-		self.speed = 7
+		self.speed = 10
 		self.facing_right = True
 
 	def update(self, keys):

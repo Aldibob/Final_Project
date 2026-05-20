@@ -27,8 +27,8 @@ player1_controls = {
 player1 = Character("Baki", 100, 10, 150, player1_controls)
 
 player1.animations = {
-	"idle_frames": load_frames(r"images\Fighter\idle"),
-	"run_frames": load_frames(r"images\Fighter\Run\run"),
+	"idle_frames": load_frames(r"images\Fighter\idle_frames"),
+	"run_frames": load_frames(r"images\Fighter\run_frames"),
 	"attack": load_frames(r"images\Fighter\attack_frames")
 }
 
