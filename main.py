@@ -2,6 +2,31 @@ import pygame
 from Character import Character, load_frames
 
 
+def reset_game():
+    global player1, player2, game_state, winner
+
+    player1.hp = player1.max_hp
+    player2.hp = player2.max_hp
+
+    player1.x = 150
+    player2.x = 900
+
+    player1.is_dead = False
+    player2.is_dead = False
+
+    player1.state = "idle_frames"
+    player2.state = "idle_frames"
+
+    player1.frame_index = 0
+    player2.frame_index = 0
+
+    player1.attack_cooldown = 0
+    player2.attack_cooldown = 0
+
+    game_state = "fight"
+    winner = None
+
+
 clock = pygame.time.Clock()
 
 pygame.init()
@@ -12,6 +37,9 @@ pygame.display.set_icon(icon)
 
 font = pygame.font.Font("fonts/Roboto_Condensed-BlackItalic.ttf", 50)
 button_rect = pygame.Rect(500,250,300,60)
+
+restart_rect = pygame.Rect(500, 350, 200, 60)
+
 
 bg = pygame.image.load('icons/main_bg.jpg').convert()
 
@@ -38,7 +66,8 @@ player1.animations = {
 	"run_frames": load_frames(r"images\Fighter\run_frames"),
 	"attack": load_frames(r"images\Fighter\attack_frames"),
 	"death": load_frames(r"images\Fighter\dead_frames"),
-	"block": load_frames(r"images\Fighter\block_frames")
+	"block": load_frames(r"images\Fighter\block_frames"),
+	"hurt": load_frames(r"images\Fighter\hurt_frames")
 }
 
 player2_controls = {
@@ -56,7 +85,8 @@ player2.animations = {
 	"run_frames": load_frames(r"images\Samurai\run_frames"),
 	"attack": load_frames(r"images\Samurai\attack_frames"),
 	"death": load_frames(r"images\Samurai\dead_frames"),
-	"block": load_frames(r"images\Samurai\block_frames")
+	"block": load_frames(r"images\Samurai\block_frames"),
+	"hurt": load_frames(r"images\Samurai\hurt_frames")
 }
 
 
@@ -117,6 +147,12 @@ while running:
 		screen.blit(text, (450, 180))
 		screen.blit(win_text, (420, 260))
 
+		pygame.draw.rect(screen, (60,60,60), restart_rect)
+
+		restart_text = font.render("RESTART", True, (255,255,255))
+		restart_text_rect = restart_text.get_rect(center = restart_rect.center)
+
+		screen.blit(restart_text, restart_text_rect)
 
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
@@ -134,6 +170,10 @@ while running:
 			if game_state == "menu":
 				if button_rect.collidepoint(event.pos):
 					game_state = "fight"
+
+			elif game_state == "game_over":
+				if restart_rect.collidepoint(event.pos):
+					reset_game()
 
 	pygame.display.update()
 	clock.tick(30)

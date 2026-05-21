@@ -48,11 +48,15 @@ class Character:
 
 		self.vx = 0
 		self.speed = 10
+
 		self.facing_right = True
-
 		self.is_dead = False
-
 		self.is_blocking = False
+
+		self.is_hurt = False
+		self.hurt_timer = 0
+
+		self.knockback_speed = 0
 
 	def update(self, keys):
 		if not self.is_dead and not self.is_attacking:
@@ -61,6 +65,8 @@ class Character:
 			self.is_blocking = False
 
 		self.update_attack()
+		self.update_hurt()
+		self.knockback()
 		self.update_animation()
 
 		if self.is_dead:
@@ -80,6 +86,8 @@ class Character:
 			self.vx = 0
 			self.is_attacking = False
 
+		elif self.is_hurt:
+			self.state = "hurt"
 		elif self.is_attacking:
 			self.state = "attack"
 		elif self.is_blocking:
@@ -105,9 +113,19 @@ class Character:
 				self.frame_index = len(frames) - 1
 			return
 
+		if self.state == "hurt":
+			if self.frame_index >= len(frames) - 1:
+				self.frame_index = len(frames) - 1
+			return
+
 		if self.frame_index >= len(frames):
 			if self.state == "attack":
 				self.is_attacking = False
+				self.hit_done = False
+				self.attack_cooldown = self.attack_cooldown_max
+			if self.state == "hurt":
+				self.is_hurt = False
+
 			self.frame_index = 0
 
 	def draw(self, screen):
@@ -127,7 +145,7 @@ class Character:
 		screen.blit(frame, (self.x, self.y))
 
 	def move(self,keys):
-		if self.is_attacking or self.is_blocking:
+		if self.is_attacking or self.is_blocking or self.is_hurt:
 			self.vx = 0
 			return
 
@@ -164,6 +182,12 @@ class Character:
 
 
 	def start_attack(self):
+		if self.is_dead:
+			return
+
+		if self.hurt_timer > 5:
+			return
+
 		if self.is_attacking:
 			return
 
@@ -205,22 +229,24 @@ class Character:
 		if not self.is_attacking:
 			return
 
-		current_frame = int(self.frame_index)
+		if self.hit_done:
+			return
 
+		current_frame = int(self.frame_index)
 		if current_frame < self.attack_start_frame or current_frame > self.attack_end_frame:
 			return
 
-		if self.hit_done:
+		if self.attack_timer < 3 or self.attack_timer > 6:
 			return
 
 		attack_box = self.attack_hitbox()
 
 		if attack_box and attack_box.colliderect(other.get_hitbox()):
-			other.take_damage(self.damage)
+			other.take_damage(self.damage,self)
 
 			self.hit_done = True
 
-	def take_damage(self,dmg):
+	def take_damage(self,dmg,attacker):
 		if self.is_dead:
 			return
 		if self.is_blocking:
@@ -228,11 +254,32 @@ class Character:
 
 		self.hp -= dmg
 
+		self.is_hurt = True
+		self.hurt_timer = 10
+		self.frame_index = 0
+
+		if attacker.x < self.x:
+			self.knockback_speed = 15
+		else:
+			self.knockback_speed = -15
+
 		if self.hp <= 0:
 			self.hp = 0
 			self.is_dead = True
 			self.state = "death"
 			self.frame_index = 0
+
+	def update_hurt(self):
+		if self.is_hurt:
+			self.hurt_timer -= 1
+			if self.hurt_timer <= 0:
+				self.is_hurt = False
+
+	def knockback(self):
+		self.x += self.knockback_speed
+		self.knockback_speed *= 0.8
+		if abs(self.knockback_speed) < 1:
+			self.knockback_speed = 0
 
 	def draw_hp(self,screen,x,y):
 		pygame.draw.rect(screen, (60,60,60), (x,y,300,30))
